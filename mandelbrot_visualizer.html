@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>2D Canvas Example</title>
+	<style>
+		canvas {
+			border: 1px solid black;
+		}
+	</style>
+    <script src=https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.3.0/math.min.js></script>
+    <script>
+
+// ----------------- Palette --------------------------
+
+        var colorPalette = [];
+        function Palette(colorType,divisionPoints,colors) {
+                this.colorType = colorType || "HSB";
+                this.divisionPoints = divisionPoints || [0,1];
+                this.divisionColors = colors || (this.colorType == "HSB" ? [ [0,1,1], [1,1,1] ] : [ [1,1,1], [0,0,0] ]);
+            }
+        Palette.prototype.getColor = function(position) {  // 0.0 <= position <= 1.0
+                var pt = 1;
+                while (position > this.divisionPoints[pt])
+                    pt++;
+                var ratio = (position - this.divisionPoints[pt-1]) /
+                            (this.divisionPoints[pt] - this.divisionPoints[pt-1]);
+                var c1 = this.divisionColors[pt-1];
+                var c2 = this.divisionColors[pt];
+                var a = c1[0] + ratio*(c2[0] - c1[0]);
+                var b = c1[1] + ratio*(c2[1] - c1[1]);
+                var c = c1[2] + ratio*(c2[2] - c1[2]);
+                return this.toRGB(a,b,c);
+            };
+        Palette.prototype.toRGB = function(a,b,c) {  // 3 non-clamped color components.
+                a = (this.colorType == "HSB")? (a - Math.floor(a)) : clamp(a);
+                b = clamp(b);
+                c = clamp(c);
+                var color;
+                if (this.colorType == "HSB")
+                    color = rgbFromHSV(a, b, c);
+                else
+                    color = [a,b,c];
+                color[0] = Math.round(color[0]*255);
+                color[1] = Math.round(color[1]*255);
+                color[2] = Math.round(color[2]*255);
+                return color;
+                function clamp(x) {
+                    x = 2*(x/2 - Math.floor(x/2));
+                    if (x > 1)
+                        x = 2 - x;
+                    return x;
+                }
+                function rgbFromHSV(h,s,v) {  // all components in range 0 to 1
+                    h *= 360;
+                    var r,g,b;
+                    var c,x;
+                    c = v*s;
+                    x = (h < 120)? h/60 : (h < 240)? (h-120)/60 : (h-240)/60;
+                    x = c * (1-Math.abs(x-1));
+                    x += (v-c);
+                    switch (Math.floor(h/60)) {
+                        case 0: r = v; g = x; b = v-c; break;
+                        case 1: r = x; g = v; b = v-c; break;
+                        case 2: r = v-c; g = v; b = x; break;
+                        case 3: r = v-c; g = x; b = v; break;
+                        case 4: r = x; g = v-c; b = v; break;
+                        case 5: r = v; g = v-c; b = x; break;
+                    }
+                    return [r,g,b];
+                }
+            };
+        function createPalette(){
+            palette = new Palette("RGB",[0,0.2,0.4,0.5,0.6,0.8,1],
+                     [[0,0,0],[1,0,0],[1,1,0],[1,1,1],[1,1,0],[1,0,0],[0,0,0]]);
+                // return(palette.getColor(numIterations/maxIterations))
+                var paletteLength = 250;
+                // var dx = 1.0 / (paletteLength-1);
+                for (var i = 0; i < paletteLength; i++) {
+                    colorPalette[i] = palette.getColor(i/paletteLength);
+                }
+        }
+        
+        createPalette();
+
+        window.onload = function () {
+            osc = document.createElement('canvas');
+            const canvas = document.getElementById('myCanvas');
+		    const ctx = canvas.getContext('2d');
+
+            osc.width = canvas.width;
+            osc.height = canvas.height;
+            osg = osc.getContext('2d');
+            osg.fillStyle="#BBBBBB";
+            osg.fillRect(0,0,canvas.width,canvas.height);
+            imageData = osg.getImageData(0, 0, canvas.width, 1);
+            
+            var jobs;
+            var workers;
+            var workerCount = 1;
+            var running = false;
+            posx = 0.8
+            posy = 1.2
+            negx = -2.2
+            negy = -1.2
+            var maxIterations = 1000;
+
+            
+            // console.log(imageData);
+            // console.log(imageData.data.length);
+            
+            function dodraw() {
+                // console.log("hi");
+                ctx.drawImage(osc, 0, 0);
+            }
+
+            function repaint() {
+                dodraw();
+                if (running){
+                    setTimeout(repaint,500);
+                }          
+            }
+
+            function jobFinished(e){
+
+                var job = e.data;
+                if (jobs.length>0){
+                    var worker = workers[job.workerNumber];
+                    var currJob = jobs.pop();
+                    worker.postMessage(
+                        {rowNumber:currJob.row, columnCount: currJob.columns, 
+                            workerNumber: job.workerNumber, posx: posx, negx: negx, posy: posy, negy: negy, maxIterations:maxIterations});
+                }
+                var iterationCounts = job.iterationCounts;
+                putrow(job.row, iterationCounts);
+            }
+
+
+
+            
+
+            function putrow(row, iterationCounts) {
+                // console.log(maxIterations);
+                for (let j = 0; j < canvas.width; j++) {
+
+                    colors = iterationCounts[j] == maxIterations ? [0,0,0]: isMandelbrot(iterationCounts[j]);
+                    const r = colors[0];
+                    const g = colors[1];
+                    const b = colors[2];
+                    imageData.data[j*4] = r;
+                    imageData.data[j*4+1] = g;
+                    imageData.data[j*4+2] = b;
+                    imageData.data[j*4+3] = 255
+                    // imageData.data[j*4] = 0;
+                    // imageData.data[j*4+1] = 0;
+                    // imageData.data[j*4+2] = 0;
+                    // imageData.data[j*4+3] = 255
+                    
+                }
+                // console.log(imageData);
+                osg.putImageData(imageData, 0, row);
+            }
+
+
+            
+
+            function isMandelbrot(numIterations){
+                // palette = new Palette();
+                
+                // colorPalette[0] = palette.toRGB(palette.divisionColors[0][0],palette.divisionColors[0][1],palette.divisionColors[0][2]);
+                // console.log(colorPalette[0]);
+                return colorPalette[numIterations%250];
+            }
+            
+            function newWorkers(count){
+                if (workers){
+                    for (let i = 0; i<workers.length; i++){
+                        workers[i].terminate();
+                    }
+                }
+
+                workers = [];
+
+                for(let i = 0; i<count; i++){
+                    workers[i] = new Worker('worker.js');
+                    workers[i].onmessage = jobFinished;
+                }
+            }
+            
+            function onclick() {
+                jobs = [];
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+                osg.fillStyle="#BBBBBB";
+                osg.fillRect(0,0,canvas.width,canvas.height);
+                // osg.fillStyle="#BBBBBB";
+                // osg.fillRect(0,0,canvas.width,canvas.height);
+                // ctx.drawImage(osc, 0, 0);
+                
+                for (let i = 0; i < canvas.height; i++) {
+                    jobs[i] = {row: i, columns: canvas.width}  
+		        }
+                newWorkers(workerCount);
+
+                running = true;
+                repaint();
+
+                for (let i = 0; i< workerCount; i++){
+                    let currJob = jobs.pop();
+                    // console.log(workers[i]);
+                    workers[i].postMessage(
+                        {rowNumber:currJob.row, columnCount: currJob.columns, 
+                            workerNumber: i, posx: posx, negx: negx, posy: posy, negy: negy, maxIterations:maxIterations});
+                }
+                // console.log(isMandelbrot(0,1,100));
+                
+                // console.log(osg.getImageData.data);               
+            }
+
+            onclick();
+
+            var button = document.getElementById('myButton');
+			button.onclick = onclick;   
+        }		
+	</script>
+</head>
+<body>
+	<canvas id="myCanvas" width="640" height="480"></canvas>
+    <button id = "myButton">Refresh</button>
+	
+</body>
+</html>
