@@ -516,7 +516,7 @@ window.onload = function () {
 
     initialize();
     canvas.onmousedown = handleCanvasMouseDown;
-    canvas.ontouchstart = handleCanvasMouseDown;
+    canvas.ontouchstart = handleCanvasTouchDown(e);
     // console.log(window.outerWidth);
     var button = document.getElementById('refreshButton');
     button.onclick = initialize;   
