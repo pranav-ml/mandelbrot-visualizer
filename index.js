@@ -173,7 +173,9 @@ window.onload = function () {
             }
             
             canvas.removeEventListener("mousemove",onDrag);
+            canvas.removeEventListener("touchmove", onDrag)
             window.removeEventListener("mouseup",onMouseUp);
+            window.removeEventListener("touchup", onMouseUp)
             // console.log(dragbox.height, dragbox.width);
             if (dragbox.height<0 || dragbox.width<0){
               dragbox.x += dragbox.width;
@@ -202,8 +204,10 @@ window.onload = function () {
         var mouseY = e.clientY - canvasCoordinates.y;
         // console.log(mouseX, mouseY);
         e.target.addEventListener("mousemove", onDrag);
+        e.target.addEventListener("touchmove", onDrag)
         // e.target.addEventListener("mouseup", onMouseUp);
         window.addEventListener("mouseup",onMouseUp);
+        window.addEventListener("touchend", onMouseUp)
         dragbox = new DragBox(mouseX, mouseY);
         // console.log(dragbox);
         // dragbox.draw();
@@ -430,6 +434,7 @@ window.onload = function () {
 
     initialize();
     canvas.onmousedown = handleCanvasMouseDown;
+    canvas.ontouchstart = handleCanvasMouseDown;
     // console.log(window.outerWidth);
     var button = document.getElementById('refreshButton');
     button.onclick = initialize;   
