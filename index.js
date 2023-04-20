@@ -494,9 +494,9 @@ window.onload = function () {
     }
     
     function initialize() {
-        // document.getElementById('maxIterations').value = "5000";
-        // document.getElementById('workers').value = "16";
-        // console.log(window.innerHeight, window.innerWidth);
+        document.getElementById('maxIterations').value = "5000";
+        document.getElementById('workers').value = "16";
+        console.log(window.innerHeight, window.innerWidth);
         maxIterations = 5000;
         workerCount = 16;
         stateStack = [];
@@ -516,7 +516,7 @@ window.onload = function () {
 
     initialize();
     canvas.onmousedown = handleCanvasMouseDown;
-    canvas.ontouchstart = handleCanvasTouchDown(e);
+    canvas.ontouchstart = handleCanvasTouchDown;
     // console.log(window.outerWidth);
     var button = document.getElementById('refreshButton');
     button.onclick = initialize;   
