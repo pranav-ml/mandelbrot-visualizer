@@ -133,8 +133,9 @@ window.onload = function () {
 
     function handleCanvasTouchDown(e){
       // console.log(e);
-
       function onDrag(e){
+          e.preventDefault();
+          e.stopPropagation();
           var x = e.touches[0].clientX - canvasCoordinates.x;
           var y = e.touches[0].clientY - canvasCoordinates.y;
           // console.log(x, y);
