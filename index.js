@@ -130,6 +130,88 @@ window.onload = function () {
         negy = negy.setScale(20,BigDecimal.ROUND_HALF_EVEN);
         posy = posy.setScale(20,BigDecimal.ROUND_HALF_EVEN);
     }
+
+    function handleCanvasTouchDown(e){
+      // console.log(e);
+
+      function onDrag(e){
+          var x = e.touches[0].clientX - canvasCoordinates.x;
+          var y = e.touches[0].clientY - canvasCoordinates.y;
+          // console.log(x, y);
+          var rectwidth =  x - mouseX;
+          var rectheight = y - mouseY
+          if (rectwidth>=rectheight){
+              dragbox.width = rectwidth;
+              dragbox.height = 0.8 * dragbox.width;
+          }
+          else{
+              dragbox.height = rectheight;
+              dragbox.width = 1.25 * dragbox.height;
+          }
+          // console.log(dragbox.height, dragbox.width);
+          repaint();
+
+          // dragbox.draw();
+      }
+      
+      function onMouseUp(e){
+          
+          function calculateNewLimits(){
+              if (!dragbox) return;
+              var up = new BigDecimal("" + math.round(dragbox.y));
+              var left = new BigDecimal("" + math.round(dragbox.x));
+              var down = new BigDecimal("" + math.round(dragbox.y + dragbox.height));
+              var right = new BigDecimal("" + math.round(dragbox.x + dragbox.width));
+
+              up = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(up));
+              down = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(down));
+              left = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(left));
+              right = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(right));
+              setLimits(right,up,left,down);
+
+
+          }
+          
+          canvas.removeEventListener("mousemove",onDrag);
+          canvas.removeEventListener("touchmove", onDrag)
+          window.removeEventListener("mouseup",onMouseUp);
+          window.removeEventListener("touchup", onMouseUp)
+          // console.log(dragbox.height, dragbox.width);
+          if (dragbox.height<0 || dragbox.width<0){
+            dragbox.x += dragbox.width;
+            dragbox.y += dragbox.height;
+
+            dragbox.width *= -1;
+            dragbox.height *= -1;
+            
+          }
+          if (dragbox.height>10 && dragbox.width>10){
+              prevstate = [posx, posy, negx, negy];
+              stateStack.push(prevstate);
+              calculateNewLimits();
+              dragbox = null;
+              startJob();
+          }
+          dragbox = null;
+          repaint();
+          
+
+      }
+      
+      var canvasCoordinates = canvas.getBoundingClientRect();
+      // console.log(canvasCoordinates.x, canvasCoordinates.y);
+      var mouseX = e.touches[0].clientX - canvasCoordinates.x;
+      var mouseY = e.touches[0].clientY - canvasCoordinates.y;
+      // console.log(mouseX, mouseY);
+      e.target.addEventListener("mousemove", onDrag);
+      e.target.addEventListener("touchmove", onDrag)
+      // e.target.addEventListener("mouseup", onMouseUp);
+      window.addEventListener("mouseup",onMouseUp);
+      window.addEventListener("touchend", onMouseUp)
+      dragbox = new DragBox(mouseX, mouseY);
+      // console.log(dragbox);
+      // dragbox.draw();
+  }
     
     function handleCanvasMouseDown(e){
         // console.log(e);
