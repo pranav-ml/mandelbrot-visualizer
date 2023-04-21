@@ -98,6 +98,7 @@ window.onload = function () {
 // ---------- multithreading variables ----------
     
     var jobs;
+    var jobsFinished = 0;
     var workers;
     var workerCount = 16;
     var running = false;
@@ -313,21 +314,21 @@ window.onload = function () {
             ctx.drawImage(osc, 0, 0);
             if (dragbox){
                 dragbox.draw();
-            }
-            if (running){
-              calculatedRowsIndicator.innerHTML = "Calculated Row "+(canvasHeight-jobs.length)+"/"+canvas.height;
-              calculatedRowsIndicator.style.color = "blue";
-              calculatedRowsIndicator.style.display = "block";
-            }
-            
+            }           
 
         }
-        dodraw();      
+        dodraw();
+        if (running){
+            calculatedRowsIndicator.innerHTML = "Calculated Row "+jobsFinished+"/"+canvas.height;
+            calculatedRowsIndicator.style.color = "blue";
+            calculatedRowsIndicator.style.display = "block";
+          } 
     }
 
     function jobFinished(e){
 
         var job = e.data;
+        jobsFinished+=1;
         // console.log(job);
         if (jobs.length>0){
             var worker = workers[job[3]];
@@ -442,10 +443,12 @@ window.onload = function () {
         // console.log(negx.scale()); 
         statusIndicator.innerHTML = "Processing";  
         statusIndicator.style.color = "red";    
-        jobs = [];
         ctx.fillRect(0,0,canvasWidth,canvasHeight);
         osg.fillStyle="#BBBBBB";
         osg.fillRect(0,0,canvasWidth,canvasHeight);
+
+        jobs = [];
+        jobsFinished = 0;
 
         var dx = posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN);
         var dy = posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN);
@@ -462,7 +465,7 @@ window.onload = function () {
             dx = dx.multiply(ten);
         }
         if (precision>high_precision_cutoff){
-            statusIndicator.innerHTML = "Processing High Precision "+precision+" digits";
+            statusIndicator.innerHTML = "Calculating High Precision ("+precision+" digits)";
             high_precision = true;
             negx.setScale(precision+5, BigDecimal.ROUND_HALF_EVEN);
             negy.setScale(precision+5, BigDecimal.ROUND_HALF_EVEN);
