@@ -116,9 +116,14 @@ window.onload = function () {
 // --------- processing variables --------------
 
     var maxIterations = 5000;
-    stateStack = [];
+    var stateStack = [];
     var prevstate;
     var hp = false;
+    var ten = new BigDecimal('10');
+    var two = new BigDecimal('2');
+    var precision = 0;
+    var high_precision_cutoff = 16
+    var high_precision = false;
 
 // -------------- status indicator variables ------------
 
@@ -406,21 +411,17 @@ window.onload = function () {
     }
 
     function convert( /* int[] */ x, /* BigDecimal */ X, /* int */ count) {
-        console.log("____start_____");
-        console.log(X.toString());
+        var /* BigDecimal */ twoTo16 = new BigDecimal("65536");
         var neg = false;
-        var twoTo16 = new BigDecimal("65536");
         if (X.signum() == -1) {
             neg = true;
             X = X.negate();
         }
         x[0] = Number(X.setScale(0,BigDecimal.ROUND_DOWN).toString());
         for (var i = 1; i < count; i++) {
-            
             X = X.subtract(new BigDecimal(""+x[i-1]));
             X = X.multiply(twoTo16);
             x[i] = Number(X.setScale(0,BigDecimal.ROUND_DOWN).toString());
-            console.log(0XFFFF);
         }
         if (neg) {
             negate(x,count);
@@ -435,7 +436,7 @@ window.onload = function () {
             }
             x[0] &= 0xFFFF;
         }
-}
+    }
 
     function startJob() {
         // console.log(negx.scale()); 
@@ -453,32 +454,60 @@ window.onload = function () {
         var ymax_d = Number(posy.toString());
         var dx_d = Number(dx.toString());
         var dy_d = Number(dy.toString());
+
+        precision = 0
+        while (dx.compareTo(two)<=0){
+            precision+=1;
+            // console.log(dx.toString());
+            dx = dx.multiply(ten);
+        }
+        if (precision>high_precision_cutoff){
+            statusIndicator.innerHTML = "Processing High Precision "+precision+" digits";
+            high_precision = true;
+            negx.setScale(precision+5, BigDecimal.ROUND_HALF_EVEN);
+            negy.setScale(precision+5, BigDecimal.ROUND_HALF_EVEN);
+            posx.setScale(precision+5, BigDecimal.ROUND_HALF_EVEN);
+            posy.setScale(precision+5, BigDecimal.ROUND_HALF_EVEN);
+
+            var dx = posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).setScale(precision,BigDecimal.ROUND_HALF_EVEN);
+
+            var log2of10 = Math.log(10)/Math.log(2);
+            var chunks = Math.floor((precision * log2of10)/16 + 2);
+            // console.log(precision);
+            // console.log(chunks);
+            dxArray = new Array(chunks+1);
+            xminArray = new Array(chunks+1);
+
+            convert(xminArray, negx, chunks+1);
+            convert(dxArray, dx, chunks+1);
+
+            var row = 0;
+            var divisions = Math.ceil(canvasHeight/4);
+            for (let j = 0; j < divisions; j++)
+                for (let i = 0; i<canvasHeight; i+=divisions){
+                    var yValArray = new Array(chunks+1);
+                    convert(yValArray, yVal, chunks+1);
+                    // console.log(yVal_d);
+                    jobs[canvasHeight - (i+j) - 1] = {row: row++, columns: canvasWidth,xmin: xminArray, dx: dxArray, yVal: yValArray};
+                    yVal = yVal.subtract(dy);
+                }
+        }
+
+        else{
+            var row = 0;
+            var divisions = Math.ceil(canvasHeight/4);
+            for (let j = 0; j < divisions; j++)
+                for (let i = 0; i<canvasHeight; i+=divisions){
+                    var yVal_d = ymax_d - row*dy_d;
+                    // console.log(yVal_d);
+                    jobs[canvasHeight - (i+j) - 1] = {row: row++, columns: canvasWidth,xmin: xmin_d, dx: dx_d, yVal: yVal_d};
+                }
+
+        }
         
-        var log2of10 = Math.log(10)/Math.log(2);
-        var digits = negx.scale();
-        var chunks = Math.floor((digits * log2of10)/16 + 2);
-        dxArray = new Array(chunks+1);
-        xminArray = new Array(chunks+1);
-        // convert(xminArray, posx, chunks+1);
-        // console.log(xminArray);
-        // console.log(yVal.toString());
-        // var yVal_max = Number(posy.toString()) + dy_d/2;
-        // console.log();
         
-        // for (let i = 0; i < canvasHeight; i++) {
-        //     var yVal_d = ymax_d - i*dy_d;
-        //     // console.log(dy_d);
-        //     // console.log();
-        //     jobs[canvasHeight - i - 1] = {row: i, columns: canvasWidth,xmin: xmin_d, dx: dx_d, yVal: yVal_d}  
-        //     }
-        var row = 0;
-        var divisions = Math.ceil(canvasHeight/4);
-        for (let j = 0; j < divisions; j++)
-            for (let i = 0; i<canvasHeight; i+=divisions){
-                var yVal_d = ymax_d - row*dy_d;
-                // console.log(yVal_d);
-                jobs[canvasHeight - (i+j) - 1] = {row: row++, columns: canvasWidth,xmin: xmin_d, dx: dx_d, yVal: yVal_d};
-            }
+        
+        
         newWorkers(workerCount);
 
         running = true;
@@ -487,7 +516,7 @@ window.onload = function () {
         for (let i = 0; i< workerCount; i++){
             let j = jobs.pop();
             // console.log(workers[i]);
-            workers[i].postMessage(["setup",j.row, maxIterations,hp,i]);
+            workers[i].postMessage(["setup",j.row, maxIterations,high_precision,i]);
             workers[i].postMessage([
                 "task", j.row, j.columns,
                 j.xmin, j.dx, j.yVal
