@@ -507,13 +507,29 @@ window.onload = function () {
     }
     
     function initialize() {
+        canvas.onmousedown = handleCanvasMouseDown;
+        canvas.ontouchstart = handleCanvasTouchDown;
+
+        var button = document.getElementById('refreshButton');
+        button.onclick = initialize;   
+
+        var undoButton = document.getElementById('undoButton');
+        undoButton.onclick = undo;
+
+        var selectIter = document.getElementById('maxIterations');
+        selectIter.onchange = onMaxIterationChange;
+
+        var selectWorkers = document.getElementById('workers');
+        selectWorkers.onchange = onWorkerCountChange;
+
         document.getElementById('maxIterations').value = "5000";
-        document.getElementById('workers').value = "16";
-        console.log(window.innerHeight, window.innerWidth);
+        document.getElementById('workers').value = "8";
+
         maxIterations = 5000;
-        workerCount = 16;
+        workerCount = 8;
         stateStack = [];
         setLimits(new BigDecimal("0.8"),new BigDecimal("1.2"),new BigDecimal("-2.2"),new BigDecimal("-1.2"));
+        
         startJob();
     }
     
@@ -528,15 +544,5 @@ window.onload = function () {
     }
 
     initialize();
-    canvas.onmousedown = handleCanvasMouseDown;
-    canvas.ontouchstart = handleCanvasTouchDown;
-    // console.log(window.outerWidth);
-    var button = document.getElementById('refreshButton');
-    button.onclick = initialize;   
-    var undoButton = document.getElementById('undoButton');
-    undoButton.onclick = undo;
-    var selectIter = document.getElementById('maxIterations');
-    selectIter.onchange = onMaxIterationChange;
-    var selectWorkers = document.getElementById('workers');
-    selectWorkers.onchange = onWorkerCountChange;
+    
 }		
