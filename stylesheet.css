@@ -48,13 +48,27 @@ select {
   select::-ms-expand {
     display: none;
   }
-  
-  
+
+.buttons{
+    font-size: 60px;
+    color: rgb(41, 41, 41);
+}
+
+.buttons:hover{
+    cursor: pointer;
+}
 
 .button_container{
     flex: 1;
     display: flex;
     flex-direction: column;
+}
+
+.button_container_right{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
 }
 
 .setting_options{
@@ -67,6 +81,7 @@ select {
     color: #444444;
 }
 
+
 #canvas_container{
     display: flex;
     width: 100%;
@@ -77,17 +92,13 @@ select {
 
 #myCanvas{
     margin: auto;
-    /* height: 100vh;
-    width: 120vh; */
-    /* height:480px;
-    width: 600px; */
 }
 
-.buttons{
-    font-size: 60px;
-    color: rgb(41, 41, 41);
-}
-
-.buttons:hover{
-    cursor: pointer;
+#status_box{
+    font-size: 25px;
+    font-family: monospace;
+    color: #444444;
+    border-style: dashed; 
+    padding: 10px;
+    
 }

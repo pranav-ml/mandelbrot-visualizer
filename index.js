@@ -120,16 +120,23 @@ window.onload = function () {
     var prevstate;
     var hp = false;
 
+// -------------- status indicator variables ------------
+
+    var statusIndicator = document.getElementById("statusIndicator");
+    var calculatedRowsIndicator = document.getElementById("rowsCalculated");
+
+// functions
+
     function setLimits(px, py, nx, ny){
-        posx = px;
-        posy = py;
-        negx = nx;
-        negy = ny;
-        negx = negx.setScale(20,BigDecimal.ROUND_HALF_EVEN);
-        posx = posx.setScale(20,BigDecimal.ROUND_HALF_EVEN);
-        negy = negy.setScale(20,BigDecimal.ROUND_HALF_EVEN);
-        posy = posy.setScale(20,BigDecimal.ROUND_HALF_EVEN);
-    }
+      posx = px;
+      posy = py;
+      negx = nx;
+      negy = ny;
+      negx = negx.setScale(20,BigDecimal.ROUND_HALF_EVEN);
+      posx = posx.setScale(20,BigDecimal.ROUND_HALF_EVEN);
+      negy = negy.setScale(20,BigDecimal.ROUND_HALF_EVEN);
+      posy = posy.setScale(20,BigDecimal.ROUND_HALF_EVEN);
+  }
 
     function handleCanvasTouchDown(e){
       // console.log(e);
@@ -297,19 +304,20 @@ window.onload = function () {
     }
 
     function repaint() {
-        // console.log('hi');
         function dodraw() {
             ctx.drawImage(osc, 0, 0);
             if (dragbox){
-                // console.log(dragbox.height, dragbox.width);
                 dragbox.draw();
             }
+            if (running){
+              calculatedRowsIndicator.innerHTML = "Calculated Row "+(canvasHeight-jobs.length)+"/"+canvas.height;
+              calculatedRowsIndicator.style.color = "blue";
+              calculatedRowsIndicator.style.display = "block";
+            }
             
+
         }
-        dodraw();
-        // if (running){
-        //     setTimeout(repaint,1);
-        // }          
+        dodraw();      
     }
 
     function jobFinished(e){
@@ -329,6 +337,9 @@ window.onload = function () {
         }
         else{
             running = false;
+            statusIndicator.innerHTML = "Idle";
+            statusIndicator.style.color = "green";
+            calculatedRowsIndicator.style.display = "none"
         }
         var iterationCounts = job[2];
         // console.log(iterationCounts);
@@ -427,8 +438,9 @@ window.onload = function () {
 }
 
     function startJob() {
-        console.log(window.devicePixelRatio);
-        // console.log(negx.scale());
+        // console.log(negx.scale()); 
+        statusIndicator.innerHTML = "Processing";  
+        statusIndicator.style.color = "red";    
         jobs = [];
         ctx.fillRect(0,0,canvasWidth,canvasHeight);
         osg.fillStyle="#BBBBBB";
