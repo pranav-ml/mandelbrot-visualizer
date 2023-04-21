@@ -440,6 +440,7 @@ window.onload = function () {
     }
 
     function startJob() {
+        // console.log(stateStack);
         // console.log(negx.scale()); 
         statusIndicator.innerHTML = "Processing";  
         statusIndicator.style.color = "red";    
@@ -480,6 +481,7 @@ window.onload = function () {
             // console.log(chunks);
             dxArray = new Array(chunks+1);
             xminArray = new Array(chunks+1);
+            
 
             convert(xminArray, negx, chunks+1);
             convert(dxArray, dx, chunks+1);
@@ -497,6 +499,7 @@ window.onload = function () {
         }
 
         else{
+            high_precision = false;
             var row = 0;
             var divisions = Math.ceil(canvasHeight/4);
             for (let j = 0; j < divisions; j++)
