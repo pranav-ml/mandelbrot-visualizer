@@ -74,7 +74,6 @@ function preventZoom() {
     console.log("hello");
     document.body.style.zoom = 1/window.devicePixelRatio;
 }
-
 window.onload = function () {
     preventZoom();
     document.body.onresize = preventZoom;
@@ -237,11 +236,12 @@ window.onload = function () {
         // console.log(e);
 
         function onDrag(e){
-            var x = e.clientX - canvasCoordinates.x;
-            var y = e.clientY - canvasCoordinates.y;
-            // console.log(x, y);
+            var x = e.clientX/document.body.style.zoom - canvasCoordinates.x;
+            var y = e.clientY/document.body.style.zoom - canvasCoordinates.y;
+            
             var rectwidth =  x - mouseX;
-            var rectheight = y - mouseY
+            var rectheight = y - mouseY;
+            console.log(rectwidth, rectheight);
             if (rectwidth>=rectheight){
                 dragbox.width = rectwidth;
                 dragbox.height = 0.8 * dragbox.width;
@@ -302,14 +302,15 @@ window.onload = function () {
         
         var canvasCoordinates = canvas.getBoundingClientRect();
         // console.log(canvasCoordinates.x, canvasCoordinates.y);
-        var mouseX = e.clientX - canvasCoordinates.x;
-        var mouseY = e.clientY - canvasCoordinates.y;
+        var mouseX = e.clientX/document.body.style.zoom - canvasCoordinates.x;
+        var mouseY = e.clientY/document.body.style.zoom - canvasCoordinates.y;
         // console.log(mouseX, mouseY);
         e.target.addEventListener("mousemove", onDrag);
         e.target.addEventListener("touchmove", onDrag)
         // e.target.addEventListener("mouseup", onMouseUp);
         window.addEventListener("mouseup",onMouseUp);
         window.addEventListener("touchend", onMouseUp)
+
         dragbox = new DragBox(mouseX, mouseY);
         // console.log(dragbox);
         // dragbox.draw();
@@ -448,7 +449,8 @@ window.onload = function () {
     function startJob() {
         // console.log(stateStack);
         // console.log(negx.scale()); 
-        console.log(window.devicePixelRatio);
+        console.log(canvas.getBoundingClientRect());
+        // console.log(window.devicePixelRatio);
         statusIndicator.innerHTML = "Processing";  
         statusIndicator.style.color = "red";    
         ctx.fillRect(0,0,canvasWidth,canvasHeight);
@@ -549,6 +551,9 @@ window.onload = function () {
     }
     
     function initialize() {
+        document.body.onmousemove = (e) =>{
+            // console.log(e.clientX);
+        }
         canvas.onmousedown = handleCanvasMouseDown;
         canvas.ontouchstart = handleCanvasTouchDown;
 
