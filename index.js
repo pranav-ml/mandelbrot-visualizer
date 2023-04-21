@@ -70,8 +70,14 @@ function createPalette(){
 
 createPalette();
 
-window.onload = function () {
+function preventZoom() {
+    console.log("hello");
+    document.body.style.zoom = 1/window.devicePixelRatio;
+}
 
+window.onload = function () {
+    preventZoom();
+    document.body.onresize = preventZoom;
 // ---------- canvas variables --------------
 
     osc = document.createElement('canvas');
@@ -442,6 +448,7 @@ window.onload = function () {
     function startJob() {
         // console.log(stateStack);
         // console.log(negx.scale()); 
+        console.log(window.devicePixelRatio);
         statusIndicator.innerHTML = "Processing";  
         statusIndicator.style.color = "red";    
         ctx.fillRect(0,0,canvasWidth,canvasHeight);
