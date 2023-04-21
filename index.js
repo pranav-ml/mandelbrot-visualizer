@@ -154,8 +154,8 @@ window.onload = function () {
       function onDrag(e){
           e.preventDefault();
           e.stopPropagation();
-          var x = e.touches[0].clientX - canvasCoordinates.x;
-          var y = e.touches[0].clientY - canvasCoordinates.y;
+          var x = e.touches[0].clientX/document.body.style.zoom - canvasCoordinates.x;
+          var y = e.touches[0].clientY/document.body.style.zoom - canvasCoordinates.y;
           // console.log(x, y);
           var rectwidth =  x - mouseX;
           var rectheight = y - mouseY
@@ -219,8 +219,8 @@ window.onload = function () {
       
       var canvasCoordinates = canvas.getBoundingClientRect();
       // console.log(canvasCoordinates.x, canvasCoordinates.y);
-      var mouseX = e.touches[0].clientX - canvasCoordinates.x;
-      var mouseY = e.touches[0].clientY - canvasCoordinates.y;
+      var mouseX = e.touches[0].clientX/document.body.style.zoom - canvasCoordinates.x;
+      var mouseY = e.touches[0].clientY/document.body.style.zoom - canvasCoordinates.y;
       // console.log(mouseX, mouseY);
       e.target.addEventListener("mousemove", onDrag);
       e.target.addEventListener("touchmove", onDrag)
