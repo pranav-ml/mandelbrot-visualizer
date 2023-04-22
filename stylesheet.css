@@ -42,7 +42,7 @@ select {
     color: #fff;
     font-size: 16px;
     font-family: "Helvetica Neue", sans-serif;
-    text-align: center;
+    text-align: -webkit-center;
   }
   
   select::-ms-expand {
@@ -85,7 +85,7 @@ select {
 #canvas_container{
     display: flex;
     width: 100%;
-    text-align: center;
+    text-align: -webkit-center;
 
 }
 
