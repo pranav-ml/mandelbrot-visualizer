@@ -78,7 +78,10 @@ window.onload = function () {
     document.body.onresize = preventZoom;
     
 // ---------- canvas variables --------------
-
+    if (window.innerHeight>window.innerWidth){
+        alert("Please rotate your device for optimal experience.");
+        location.reload();
+    }
     osc = document.createElement('canvas');
     const canvas = document.getElementById('myCanvas');
     // canvasComputedStyle = getComputedStyle(canvas);
