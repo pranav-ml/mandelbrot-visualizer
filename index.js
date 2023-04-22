@@ -79,6 +79,7 @@ window.onload = function () {
     // console.log(screen.width, screen.height);
     
 // ---------- canvas variables --------------
+    console.log(screen.height, screen.width);
     if (screen.height>screen.width){
         alert("Please rotate your device for optimal experience.");
         location.reload();
