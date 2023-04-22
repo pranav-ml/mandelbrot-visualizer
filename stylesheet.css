@@ -81,7 +81,7 @@ select {
 
 .setting_options{
     border-bottom: 1px dashed;
-    display: table;
+    display: flex;
     flex: 1;
     /* margin: 10% 10%; */
     /* font-size: 25px; */
@@ -92,8 +92,9 @@ select {
 .setting_option{
     text-align: center;
     font-size: 1.8rem;
-    display: table-cell;
+    flex: 1;
     vertical-align: middle;
+    padding-top: 10%;
 }
 
 
