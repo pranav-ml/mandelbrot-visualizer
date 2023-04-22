@@ -157,10 +157,11 @@ window.onload = function () {
   }
 
     function handleCanvasTouchDown(e){
+      e.preventDefault();
       // console.log(e);
       function onDrag(e){
           e.preventDefault();
-          e.stopPropagation();
+        //   e.stopPropagation();
           var x = e.touches[0].clientX/document.body.style.zoom - canvasCoordinates.x;
           var y = e.touches[0].clientY/document.body.style.zoom - canvasCoordinates.y;
           // console.log(x, y);
