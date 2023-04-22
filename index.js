@@ -79,7 +79,7 @@ window.onload = function () {
     // console.log(screen.width, screen.height);
     
 // ---------- canvas variables --------------
-    console.log(document.documentElement.clientHeight);
+    console.log(window.innerHeight);
     if (document.documentElement.clientHeight>document.documentElement.clientWidth){
         alert("Please rotate your device for optimal experience.");
         location.reload();
@@ -89,7 +89,7 @@ window.onload = function () {
     // canvasComputedStyle = getComputedStyle(canvas);
     // canvasWidth = parseInt(canvasComputedStyle.width);
     // canvasHeight = parseInt(canvasComputedStyle.height);
-    canvas.height = Math.floor(Math.min(window.innerHeight,window.innerWidth)/document.body.style.zoom);
+    canvas.height = Math.floor(window.innerHeight/document.body.style.zoom);
     canvas.width = Math.ceil(canvas.height * 1.25);
     canvasHeight = canvas.height;
     canvasWidth = canvas.width;
