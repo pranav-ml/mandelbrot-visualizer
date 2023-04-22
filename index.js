@@ -79,8 +79,8 @@ window.onload = function () {
     // console.log(screen.width, screen.height);
     
 // ---------- canvas variables --------------
-    console.log(screen.height, screen.width);
-    if (screen.height>screen.width){
+    console.log(document.documentElement.clientHeight);
+    if (document.documentElement.clientHeight>document.documentElement.clientWidth){
         alert("Please rotate your device for optimal experience.");
         location.reload();
     }
