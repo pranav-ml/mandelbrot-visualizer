@@ -76,9 +76,10 @@ function preventZoom() {
 window.onload = function () {
     preventZoom();
     document.body.onresize = preventZoom;
+    // console.log(screen.width, screen.height);
     
 // ---------- canvas variables --------------
-    if (window.innerHeight>window.innerWidth){
+    if (screen.height>screen.width){
         alert("Please rotate your device for optimal experience.");
         location.reload();
     }
@@ -246,7 +247,6 @@ window.onload = function () {
             
             var rectwidth =  x - mouseX;
             var rectheight = y - mouseY;
-            console.log(rectwidth, rectheight);
             if (rectwidth>=rectheight){
                 dragbox.width = rectwidth;
                 dragbox.height = 0.8 * dragbox.width;
@@ -452,10 +452,6 @@ window.onload = function () {
     }
 
     function startJob() {
-        // console.log(stateStack);
-        // console.log(negx.scale()); 
-        console.log(canvas.getBoundingClientRect());
-        // console.log(window.devicePixelRatio);
         statusIndicator.innerHTML = "Processing";  
         statusIndicator.style.color = "red";    
         ctx.fillRect(0,0,canvasWidth,canvasHeight);
