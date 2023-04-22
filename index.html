@@ -16,42 +16,52 @@
         <div class="button_container">
             
             <div class = "setting_options">
-                <a title = "Refresh" class = "buttons" id = "refreshButton"><i class="fa-solid fa-arrows-rotate"></i></a>
-                <br>
-                REFRESH
+                <div class="setting_option">
+                    <a title = "Refresh" class = "buttons" id = "refreshButton"><i class="fa-solid fa-arrows-rotate"></i></a>
+                    <br>
+                    REFRESH
+                </div>
             </div>
             
             <div class = "setting_options">
-                <a title = "Undo Zoom" class = "buttons" id = "undoButton"><i class="fa-sharp fa-solid fa-rotate-left"></i></a>
-                <br>
-                UNDO
+                <div class="setting_option">
+                    <a title = "Undo Zoom" class = "buttons" id = "undoButton"><i class="fa-sharp fa-solid fa-rotate-left"></i></a>
+                    <br>
+                    UNDO
+                </div>
+                
             </div>
             <div class = "setting_options">
-                <select id= "maxIterations" title="Maxiterations in a Mandelbrot set determines the number of iterations used to determine if a point is in the set or not, with a higher value resulting in more detailed fractal shapes. (Increasing this value increases processing time.)">
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="250">250</option>
-                    <option value="500">500</option>
-                    <option value="1000">1000</option>
-                    <option value="5000">5000</option>
-                    <option value="10000">10000</option>
-                    <option value="50000">50000</option>
-                    <option value="100000">100000</option>
-                </select>
-                <br>
-                MAX ITERATIONS
+                <div class="setting_option">
+                    <select id= "maxIterations" title="Maxiterations in a Mandelbrot set determines the number of iterations used to determine if a point is in the set or not, with a higher value resulting in more detailed fractal shapes. (Increasing this value increases processing time.)">
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="250">250</option>
+                        <option value="500">500</option>
+                        <option value="1000">1000</option>
+                        <option value="5000">5000</option>
+                        <option value="10000">10000</option>
+                        <option value="50000">50000</option>
+                        <option value="100000">100000</option>
+                    </select>
+                    <br>
+                    MAX ITERATIONS
+                </div>
             </div>
             <div class = "setting_options">
-                <select id = "workers" title="Increasing the number of workers might increase computing speed by using more of your device's processing. Values above the number of threads supported by your device will not provide additional computational speed.">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="4">4</option>
-                    <option value="8">8</option>
-                    <option value="12">12</option>
-                    <option value="16">16</option>
-                </select>
-                <br>
-                WORKERS
+                <div class="setting_option">
+                    <select id = "workers" title="Increasing the number of workers might increase computing speed by using more of your device's processing. Values above the number of threads supported by your device will not provide additional computational speed.">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="4">4</option>
+                        <option value="8">8</option>
+                        <option value="12">12</option>
+                        <option value="16">16</option>
+                    </select>
+                    <br>
+                    WORKERS
+                </div>
+                
             </div>
         </div>
         
