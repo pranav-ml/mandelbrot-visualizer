@@ -45,7 +45,7 @@ select {
     color: #fff;
     font-size: 16px;
     font-family: "Helvetica Neue", sans-serif;
-    text-align: -webkit-center;
+    text-align: -webkit-center;    
   }
   
   select::-ms-expand {
@@ -53,7 +53,7 @@ select {
   }
 
 .buttons{
-    font-size: 60px;
+    font-size: 240%;
     color: rgb(41, 41, 41);
 }
 
