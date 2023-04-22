@@ -71,12 +71,12 @@ function createPalette(){
 createPalette();
 
 function preventZoom() {
-    console.log("hello");
-    document.body.style.zoom = 1/window.devicePixelRatio;
+    document.body.style.zoom = 1/window.devicePixelRatio;    
 }
 window.onload = function () {
     preventZoom();
     document.body.onresize = preventZoom;
+    
 // ---------- canvas variables --------------
 
     osc = document.createElement('canvas');
@@ -84,6 +84,8 @@ window.onload = function () {
     // canvasComputedStyle = getComputedStyle(canvas);
     // canvasWidth = parseInt(canvasComputedStyle.width);
     // canvasHeight = parseInt(canvasComputedStyle.height);
+    canvas.height = Math.floor(window.innerHeight/document.body.style.zoom);
+    canvas.width = Math.ceil(canvas.height * 1.25);
     canvasHeight = canvas.height;
     canvasWidth = canvas.width;
     // console.log(canvasWidth);
@@ -497,6 +499,7 @@ window.onload = function () {
 
             var row = 0;
             var divisions = Math.ceil(canvasHeight/4);
+            
             for (let j = 0; j < divisions; j++)
                 for (let i = 0; i<canvasHeight; i+=divisions){
                     var yValArray = new Array(chunks+1);
@@ -511,8 +514,11 @@ window.onload = function () {
             high_precision = false;
             var row = 0;
             var divisions = Math.ceil(canvasHeight/4);
+            // console.log(divisions);
             for (let j = 0; j < divisions; j++)
                 for (let i = 0; i<canvasHeight; i+=divisions){
+                    // console.log(i+j);
+                    if (i+j>=canvasHeight) continue;
                     var yVal_d = ymax_d - row*dy_d;
                     // console.log(yVal_d);
                     jobs[canvasHeight - (i+j) - 1] = {row: row++, columns: canvasWidth,xmin: xmin_d, dx: dx_d, yVal: yVal_d};
