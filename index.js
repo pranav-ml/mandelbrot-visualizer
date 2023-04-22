@@ -71,7 +71,7 @@ function createPalette(){
 createPalette();
 
 function preventZoom() {
-    document.body.style.zoom = 1/window.devicePixelRatio;    
+    document.body.style.zoom = 1/window.devicePixelRatio;   
 }
 window.onload = function () {
     preventZoom();

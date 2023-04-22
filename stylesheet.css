@@ -15,6 +15,7 @@ canvas:hover{
 
 select {
     /* margin: 20% 20%; */
+    text-align: center;
     width: 50%;
     height: 50px;
     margin-bottom: 10px;
@@ -45,7 +46,7 @@ select {
     color: #fff;
     font-size: 16px;
     font-family: "Helvetica Neue", sans-serif;
-    text-align: -webkit-center;    
+    text-align: center;    
   }
   
   select::-ms-expand {
@@ -86,6 +87,7 @@ select {
 }
 
 .setting_option{
+    text-align: center;
     font-size: 1.8rem;
     display: table-cell;
     vertical-align: middle;
@@ -95,7 +97,7 @@ select {
 #canvas_container{
     display: flex;
     width: 100%;
-    text-align: -webkit-center;
+    text-align: -moz-center;
 
 }
 
