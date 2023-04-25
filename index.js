@@ -74,6 +74,21 @@ function preventZoom() {
     document.body.style.zoom = 1/window.devicePixelRatio;   
 }
 window.onload = function () {
+    userAgent = navigator.userAgent;
+    var browserName;
+    if(userAgent.match(/chrome|chromium|crios/i)){
+        browserName = "chrome";
+      }else if(userAgent.match(/firefox|fxios/i)){
+        browserName = "firefox";
+      }  else if(userAgent.match(/safari/i)){
+        browserName = "safari";
+      }else if(userAgent.match(/opr\//i)){
+        browserName = "opera";
+      } else if(userAgent.match(/edg/i)){
+        browserName = "edge";
+      }else{
+        browserName="No browser detection";
+      }
     preventZoom();
     document.body.onresize = preventZoom;
     // console.log(screen.width, screen.height);
@@ -134,8 +149,9 @@ window.onload = function () {
     var hp = false;
     var ten = new BigDecimal('10');
     var two = new BigDecimal('2');
-    var precision = 0;
+    var precision = 12;
     var high_precision_cutoff = 16
+    
     var high_precision = false;
 
 // -------------- status indicator variables ------------
@@ -150,10 +166,10 @@ window.onload = function () {
       posy = py;
       negx = nx;
       negy = ny;
-      negx = negx.setScale(20,BigDecimal.ROUND_HALF_EVEN);
-      posx = posx.setScale(20,BigDecimal.ROUND_HALF_EVEN);
-      negy = negy.setScale(20,BigDecimal.ROUND_HALF_EVEN);
-      posy = posy.setScale(20,BigDecimal.ROUND_HALF_EVEN);
+      negx = negx.setScale(precision+5,BigDecimal.ROUND_HALF_EVEN);
+      posx = posx.setScale(precision+5,BigDecimal.ROUND_HALF_EVEN);
+      negy = negy.setScale(precision+5,BigDecimal.ROUND_HALF_EVEN);
+      posy = posy.setScale(precision+5,BigDecimal.ROUND_HALF_EVEN);
   }
 
     function handleCanvasTouchDown(e){
@@ -184,17 +200,18 @@ window.onload = function () {
       function onMouseUp(e){
           
           function calculateNewLimits(){
-              if (!dragbox) return;
-              var up = new BigDecimal("" + math.round(dragbox.y));
-              var left = new BigDecimal("" + math.round(dragbox.x));
-              var down = new BigDecimal("" + math.round(dragbox.y + dragbox.height));
-              var right = new BigDecimal("" + math.round(dragbox.x + dragbox.width));
-
-              up = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(up));
-              down = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(down));
-              left = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(left));
-              right = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(right));
-              setLimits(right,up,left,down);
+                if (!dragbox) return;
+                var up = new BigDecimal("" + math.round(dragbox.y));
+                var left = new BigDecimal("" + math.round(dragbox.x));
+                var down = new BigDecimal("" + math.round(dragbox.y + dragbox.height));
+                var right = new BigDecimal("" + math.round(dragbox.x + dragbox.width));
+                
+                
+                up = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(up));
+                down = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(down));
+                left = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(left));
+                right = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(right));
+                setLimits(right,up,left,down);
 
 
           }
@@ -267,16 +284,34 @@ window.onload = function () {
             
             function calculateNewLimits(){
                 if (!dragbox) return;
-                var up = new BigDecimal("" + math.round(dragbox.y));
-                var left = new BigDecimal("" + math.round(dragbox.x));
-                var down = new BigDecimal("" + math.round(dragbox.y + dragbox.height));
-                var right = new BigDecimal("" + math.round(dragbox.x + dragbox.width));
+                // var up = new BigDecimal("" + math.round(dragbox.y));
+                // var left = new BigDecimal("" + math.round(dragbox.x));
+                // var down = new BigDecimal("" + math.round(dragbox.y + dragbox.height));
+                // var right = new BigDecimal("" + math.round(dragbox.x + dragbox.width));
 
-                up = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(up));
-                down = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(down));
-                left = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(left));
-                right = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(right));
-                setLimits(right,up,left,down);
+                // up = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(up));
+                // down = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(down));
+                // left = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(left));
+                // right = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(right));
+                // setLimits(right,up,left,down);
+                // console.log(up,down);
+
+                var rectX = new BigDecimal("" + Math.round(dragbox.x));  // (Firefox can have fractional parts)
+                var rectY = new BigDecimal("" + Math.round(dragbox.y));
+                var rectW = new BigDecimal("" + Math.round(dragbox.width));
+                var rectH = new BigDecimal("" + Math.round(dragbox.height));
+                var ImageWidth = new BigDecimal("" + canvas.width);
+                var ImageHeight = new BigDecimal("" + canvas.height);
+                var pixelWidth = posx.subtract(negx).divide(ImageWidth,BigDecimal.ROUND_HALF_EVEN);
+                var pixelHeight = posy.subtract(negy).divide(ImageHeight,BigDecimal.ROUND_HALF_EVEN);
+                var newXmin,newXmax,newYmin,newYmax;
+                newXmin = negx.add(pixelWidth.multiply(rectX));
+                newYmax = posy.subtract(pixelHeight.multiply(rectY));
+                var newWidth = pixelWidth.multiply(rectW);
+                var newHeight = pixelHeight.multiply(rectH);
+                newXmax = newXmin.add(newWidth);
+                newYmin = newYmax.subtract(newHeight);
+                setLimits(newXmax,newYmax,newXmin,newYmin);
 
 
             }
@@ -404,7 +439,7 @@ window.onload = function () {
 
         for(let i = 0; i<count; i++){
             // workers[i] = new Worker('worker.js');
-            workers[i] = new Worker("mandelbrot-worker.js");
+            workers[i] = new Worker("./mandelbrot-worker.js");
             workers[i].onmessage = jobFinished;
         }
     }
@@ -454,6 +489,7 @@ window.onload = function () {
     }
 
     function startJob() {
+        newWorkers(workerCount);
         statusIndicator.innerHTML = "Processing";  
         statusIndicator.style.color = "red";    
         ctx.fillRect(0,0,canvasWidth,canvasHeight);
@@ -530,7 +566,7 @@ window.onload = function () {
         
         
         
-        newWorkers(workerCount);
+        
 
         running = true;
         repaint();
