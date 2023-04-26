@@ -73,6 +73,7 @@ createPalette();
 
 window.onload = function () {
     userAgent = navigator.userAgent;
+    applicationZoom = 1;
     var browserName;
     if(userAgent.match(/chrome|chromium|crios/i)){
         browserName = "chrome";
