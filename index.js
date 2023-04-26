@@ -75,19 +75,22 @@ window.onload = function () {
     userAgent = navigator.userAgent;
     applicationZoom = 1;
     var browserName;
-    if(userAgent.match(/chrome|chromium|crios/i)){
-        browserName = "chrome";
-      }else if(userAgent.match(/firefox|fxios/i)){
-        browserName = "firefox";
-      }  else if(userAgent.match(/safari/i)){
-        browserName = "safari";
-      }else if(userAgent.match(/opr\//i)){
-        browserName = "opera";
-      } else if(userAgent.match(/edg/i)){
-        browserName = "edge";
-      }else{
-        browserName="No browser detection";
-      }
+    if (navigator.userAgent.indexOf("Firefox") != -1) {
+  browserName = "Mozilla Firefox";
+} else if (navigator.userAgent.indexOf("Chrome") != -1) {
+  browserName = "Google Chrome";
+} else if (navigator.userAgent.indexOf("Opera") != -1 || navigator.userAgent.indexOf("OPR") != -1) {
+  browserName = "Opera";
+} else if (navigator.userAgent.indexOf("Safari") != -1) {
+  browserName = "Apple Safari";
+} else if (navigator.userAgent.indexOf("Edge") != -1) {
+  browserName = "Microsoft Edge";
+} else if (navigator.userAgent.indexOf("Trident") != -1) {
+  browserName = "Microsoft Internet Explorer";
+} else {
+  browserName = "Unknown browser";
+}
+      alert(browserName);
     function preventZoom() {
         if (browserName!="firefox")
             applicationZoom = 1/window.devicePixelRatio;
