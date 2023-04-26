@@ -71,7 +71,8 @@ function createPalette(){
 createPalette();
 
 function preventZoom() {
-    document.body.style.zoom = 1/window.devicePixelRatio;   
+    applicationZoom = 1/window.devicePixelRatio
+    document.body.style.zoom = applicationZoom;   
 }
 window.onload = function () {
     userAgent = navigator.userAgent;
@@ -106,7 +107,7 @@ window.onload = function () {
     // canvasComputedStyle = getComputedStyle(canvas);
     // canvasWidth = parseInt(canvasComputedStyle.width);
     // canvasHeight = parseInt(canvasComputedStyle.height);
-    canvas.height = Math.floor(document.documentElement.clientHeight/(document.body.style.zoom?browserName!="firefox":1));
+    canvas.height = Math.floor(document.documentElement.clientHeight/applicationZoom);
     canvas.width = Math.ceil(canvas.height * 1.25);
     canvasHeight = canvas.height;
     canvasWidth = canvas.width;
@@ -180,8 +181,8 @@ window.onload = function () {
       function onDrag(e){
           e.preventDefault();
         //   e.stopPropagation();
-          var x = e.touches[0].clientX/(document.body.style.zoom?browserName!="firefox":1) - canvasCoordinates.x;
-          var y = e.touches[0].clientY/(document.body.style.zoom?browserName!="firefox":1) - canvasCoordinates.y;
+          var x = e.touches[0].clientX/applicationZoom - canvasCoordinates.x;
+          var y = e.touches[0].clientY/applicationZoom - canvasCoordinates.y;
           // console.log(x, y);
           var rectwidth =  x - mouseX;
           var rectheight = y - mouseY
@@ -246,8 +247,8 @@ window.onload = function () {
       
       var canvasCoordinates = canvas.getBoundingClientRect();
       // console.log(canvasCoordinates.x, canvasCoordinates.y);
-      var mouseX = e.touches[0].clientX/(document.body.style.zoom?browserName!="firefox":1) - canvasCoordinates.x;
-      var mouseY = e.touches[0].clientY/(document.body.style.zoom?browserName!="firefox":1) - canvasCoordinates.y;
+      var mouseX = e.touches[0].clientX/applicationZoom - canvasCoordinates.x;
+      var mouseY = e.touches[0].clientY/applicationZoom - canvasCoordinates.y;
       // console.log(mouseX, mouseY);
       e.target.addEventListener("mousemove", onDrag);
       e.target.addEventListener("touchmove", onDrag)
@@ -263,8 +264,8 @@ window.onload = function () {
         // console.log(e);
 
         function onDrag(e){
-            var x = e.clientX/(document.body.style.zoom?browserName!="firefox":1) - canvasCoordinates.x;
-            var y = e.clientY/(document.body.style.zoom?browserName!="firefox":1) - canvasCoordinates.y;
+            var x = e.clientX/applicationZoom - canvasCoordinates.x;
+            var y = e.clientY/applicationZoom - canvasCoordinates.y;
             
             var rectwidth =  x - mouseX;
             var rectheight = y - mouseY;
@@ -346,8 +347,8 @@ window.onload = function () {
         
         var canvasCoordinates = canvas.getBoundingClientRect();
         // console.log(canvasCoordinates.x, canvasCoordinates.y);
-        var mouseX = e.clientX/(document.body.style.zoom?browserName!="firefox":1) - canvasCoordinates.x;
-        var mouseY = e.clientY/(document.body.style.zoom?browserName!="firefox":1) - canvasCoordinates.y;
+        var mouseX = e.clientX/applicationZoom - canvasCoordinates.x;
+        var mouseY = e.clientY/applicationZoom - canvasCoordinates.y;
         // console.log(mouseX, mouseY);
         e.target.addEventListener("mousemove", onDrag);
         e.target.addEventListener("touchmove", onDrag)
