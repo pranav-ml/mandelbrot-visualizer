@@ -89,8 +89,10 @@ window.onload = function () {
       }else{
         browserName="No browser detection";
       }
-    preventZoom();
-    document.body.onresize = preventZoom;
+    
+    if (browserName!="firefox")
+    {preventZoom();
+    document.body.onresize = preventZoom;}
     // console.log(screen.width, screen.height);
     
 // ---------- canvas variables --------------
@@ -104,7 +106,7 @@ window.onload = function () {
     // canvasComputedStyle = getComputedStyle(canvas);
     // canvasWidth = parseInt(canvasComputedStyle.width);
     // canvasHeight = parseInt(canvasComputedStyle.height);
-    canvas.height = Math.floor(document.documentElement.clientHeight/document.body.style.zoom);
+    canvas.height = Math.floor(document.documentElement.clientHeight/(document.body.style.zoom?browserName!="firefox":1));
     canvas.width = Math.ceil(canvas.height * 1.25);
     canvasHeight = canvas.height;
     canvasWidth = canvas.width;
@@ -150,7 +152,7 @@ window.onload = function () {
     var ten = new BigDecimal('10');
     var two = new BigDecimal('2');
     var precision = 12;
-    var high_precision_cutoff = 16
+    var high_precision_cutoff = 16;
     
     var high_precision = false;
 
@@ -178,8 +180,8 @@ window.onload = function () {
       function onDrag(e){
           e.preventDefault();
         //   e.stopPropagation();
-          var x = e.touches[0].clientX/document.body.style.zoom - canvasCoordinates.x;
-          var y = e.touches[0].clientY/document.body.style.zoom - canvasCoordinates.y;
+          var x = e.touches[0].clientX/(document.body.style.zoom?browserName!="firefox":1) - canvasCoordinates.x;
+          var y = e.touches[0].clientY/(document.body.style.zoom?browserName!="firefox":1) - canvasCoordinates.y;
           // console.log(x, y);
           var rectwidth =  x - mouseX;
           var rectheight = y - mouseY
@@ -244,8 +246,8 @@ window.onload = function () {
       
       var canvasCoordinates = canvas.getBoundingClientRect();
       // console.log(canvasCoordinates.x, canvasCoordinates.y);
-      var mouseX = e.touches[0].clientX/document.body.style.zoom - canvasCoordinates.x;
-      var mouseY = e.touches[0].clientY/document.body.style.zoom - canvasCoordinates.y;
+      var mouseX = e.touches[0].clientX/(document.body.style.zoom?browserName!="firefox":1) - canvasCoordinates.x;
+      var mouseY = e.touches[0].clientY/(document.body.style.zoom?browserName!="firefox":1) - canvasCoordinates.y;
       // console.log(mouseX, mouseY);
       e.target.addEventListener("mousemove", onDrag);
       e.target.addEventListener("touchmove", onDrag)
@@ -261,8 +263,8 @@ window.onload = function () {
         // console.log(e);
 
         function onDrag(e){
-            var x = e.clientX/document.body.style.zoom - canvasCoordinates.x;
-            var y = e.clientY/document.body.style.zoom - canvasCoordinates.y;
+            var x = e.clientX/(document.body.style.zoom?browserName!="firefox":1) - canvasCoordinates.x;
+            var y = e.clientY/(document.body.style.zoom?browserName!="firefox":1) - canvasCoordinates.y;
             
             var rectwidth =  x - mouseX;
             var rectheight = y - mouseY;
@@ -344,8 +346,8 @@ window.onload = function () {
         
         var canvasCoordinates = canvas.getBoundingClientRect();
         // console.log(canvasCoordinates.x, canvasCoordinates.y);
-        var mouseX = e.clientX/document.body.style.zoom - canvasCoordinates.x;
-        var mouseY = e.clientY/document.body.style.zoom - canvasCoordinates.y;
+        var mouseX = e.clientX/(document.body.style.zoom?browserName!="firefox":1) - canvasCoordinates.x;
+        var mouseY = e.clientY/(document.body.style.zoom?browserName!="firefox":1) - canvasCoordinates.y;
         // console.log(mouseX, mouseY);
         e.target.addEventListener("mousemove", onDrag);
         e.target.addEventListener("touchmove", onDrag)
@@ -535,7 +537,8 @@ window.onload = function () {
             convert(dxArray, dx, chunks+1);
 
             var row = 0;
-            var divisions = Math.ceil(canvasHeight/4);
+            var divisions = Math.ceil(canvasHeight/16);
+            console.log(divisions);
             
             for (let j = 0; j < divisions; j++)
                 for (let i = 0; i<canvasHeight; i+=divisions){
