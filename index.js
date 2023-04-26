@@ -70,10 +70,7 @@ function createPalette(){
 
 createPalette();
 
-function preventZoom() {
-    applicationZoom = 1/window.devicePixelRatio
-    document.body.style.zoom = applicationZoom;   
-}
+
 window.onload = function () {
     userAgent = navigator.userAgent;
     var browserName;
@@ -90,6 +87,14 @@ window.onload = function () {
       }else{
         browserName="No browser detection";
       }
+    function preventZoom() {
+        if (browserName!="firefox")
+            applicationZoom = 1/window.devicePixelRatio;
+        else
+            applicationZoom = 1;
+    // console.log(applicationZoom);
+    document.body.style.zoom = applicationZoom;   
+}
     
     if (browserName!="firefox")
     {preventZoom();
