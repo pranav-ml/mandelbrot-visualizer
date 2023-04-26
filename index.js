@@ -92,7 +92,7 @@ window.onload = function () {
     }
       alert(browserName);
     function preventZoom() {
-        if (browserName!="firefox")
+        if (browserName!="Mozilla Firefox")
             applicationZoom = 1/window.devicePixelRatio;
         else
             applicationZoom = 1;
