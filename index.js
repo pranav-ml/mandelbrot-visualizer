@@ -90,7 +90,7 @@ window.onload = function () {
     } else {
     browserName = "Unknown browser";
     }
-      alert(browserName);
+    //   alert(browserName);
     function preventZoom() {
         if (browserName!="Mozilla Firefox")
             applicationZoom = 1/window.devicePixelRatio;
@@ -547,7 +547,7 @@ window.onload = function () {
             convert(dxArray, dx, chunks+1);
 
             var row = 0;
-            var divisions = Math.ceil(canvasHeight/16);
+            var divisions = Math.ceil(canvasHeight/4);
             console.log(divisions);
             
             for (let j = 0; j < divisions; j++)
