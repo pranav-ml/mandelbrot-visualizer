@@ -171,7 +171,7 @@ window.onload = function () {
 
     var statusIndicator = document.getElementById("statusIndicator");
     var calculatedRowsIndicator = document.getElementById("rowsCalculated");
-
+    var debug;
 // functions
 
     function setLimits(px, py, nx, ny){
