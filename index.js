@@ -299,36 +299,16 @@ window.onload = function () {
             
             function calculateNewLimits(){
                 if (!dragbox) return;
-                // var up = new BigDecimal("" + math.round(dragbox.y));
-                // var left = new BigDecimal("" + math.round(dragbox.x));
-                // var down = new BigDecimal("" + math.round(dragbox.y + dragbox.height));
-                // var right = new BigDecimal("" + math.round(dragbox.x + dragbox.width));
+                var up = new BigDecimal("" + math.round(dragbox.y));
+                var left = new BigDecimal("" + math.round(dragbox.x));
+                var down = new BigDecimal("" + math.round(dragbox.y + dragbox.height));
+                var right = new BigDecimal("" + math.round(dragbox.x + dragbox.width));
 
-                // up = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(up));
-                // down = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(down));
-                // left = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(left));
-                // right = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(right));
-                // setLimits(right,up,left,down);
-                // console.log(up,down);
-
-                var rectX = new BigDecimal("" + Math.round(dragbox.x));  // (Firefox can have fractional parts)
-                var rectY = new BigDecimal("" + Math.round(dragbox.y));
-                var rectW = new BigDecimal("" + Math.round(dragbox.width));
-                var rectH = new BigDecimal("" + Math.round(dragbox.height));
-                var ImageWidth = new BigDecimal("" + canvas.width);
-                var ImageHeight = new BigDecimal("" + canvas.height);
-                var pixelWidth = posx.subtract(negx).divide(ImageWidth,BigDecimal.ROUND_HALF_EVEN);
-                var pixelHeight = posy.subtract(negy).divide(ImageHeight,BigDecimal.ROUND_HALF_EVEN);
-                var newXmin,newXmax,newYmin,newYmax;
-                newXmin = negx.add(pixelWidth.multiply(rectX));
-                newYmax = posy.subtract(pixelHeight.multiply(rectY));
-                var newWidth = pixelWidth.multiply(rectW);
-                var newHeight = pixelHeight.multiply(rectH);
-                newXmax = newXmin.add(newWidth);
-                newYmin = newYmax.subtract(newHeight);
-                setLimits(newXmax,newYmax,newXmin,newYmin);
-
-
+                up = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(up));
+                down = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(down));
+                left = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(left));
+                right = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(right));
+                setLimits(right,up,left,down);
             }
             
             canvas.removeEventListener("mousemove",onDrag);
