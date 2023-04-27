@@ -72,6 +72,7 @@ createPalette();
 
 
 window.onload = function () {
+    // console.log('hello');
     userAgent = navigator.userAgent;
     applicationZoom = 1;
     var browserName;
@@ -195,14 +196,15 @@ window.onload = function () {
           // console.log(x, y);
           var rectwidth =  x - mouseX;
           var rectheight = y - mouseY
-          if (rectwidth>=rectheight){
-              dragbox.width = rectwidth;
-              dragbox.height = 0.8 * dragbox.width;
-          }
-          else{
-              dragbox.height = rectheight;
-              dragbox.width = 1.25 * dragbox.height;
-          }
+        //   console.log(rectwidth, rectheight);
+        if (Math.abs(rectwidth)>=Math.abs(rectheight)){
+            dragbox.width = rectwidth;
+            dragbox.height = 0.8 * Math.abs(dragbox.width) * ((rectheight<0)?-1:1);
+        }
+        else{
+            dragbox.height = rectheight;
+            dragbox.width = 1.25 * Math.abs(dragbox.height) * ((rectwidth<0)?-1:1);
+        }
           // console.log(dragbox.height, dragbox.width);
           repaint();
 
@@ -228,28 +230,28 @@ window.onload = function () {
 
           }
           
-          canvas.removeEventListener("mousemove",onDrag);
-          canvas.removeEventListener("touchmove", onDrag)
-          window.removeEventListener("mouseup",onMouseUp);
-          window.removeEventListener("touchup", onMouseUp)
-          // console.log(dragbox.height, dragbox.width);
-          if (dragbox.height<0 || dragbox.width<0){
-            dragbox.x += dragbox.width;
-            dragbox.y += dragbox.height;
-
-            dragbox.width *= -1;
-            dragbox.height *= -1;
-            
-          }
-          if (dragbox.height>10 && dragbox.width>10){
-              prevstate = [posx, posy, negx, negy];
-              stateStack.push(prevstate);
-              calculateNewLimits();
-              dragbox = null;
-              startJob();
-          }
-          dragbox = null;
-          repaint();
+            canvas.removeEventListener("mousemove",onDrag);
+            canvas.removeEventListener("touchmove", onDrag)
+            window.removeEventListener("mouseup",onMouseUp);
+            window.removeEventListener("touchup", onMouseUp)
+            // console.log(dragbox.height, dragbox.width);
+            if (dragbox.height<0){
+                dragbox.y+=dragbox.height;
+                dragbox.height *= -1;
+            }
+            if (dragbox.width<0){
+                dragbox.x += dragbox.width;
+                dragbox.width *= -1;
+            }
+            if (dragbox.height>10 && dragbox.width>10){
+                prevstate = [posx, posy, negx, negy];
+                stateStack.push(prevstate);
+                calculateNewLimits();
+                dragbox = null;
+                startJob();
+            }
+            dragbox = null;
+            repaint();
           
 
       }
@@ -278,15 +280,16 @@ window.onload = function () {
             
             var rectwidth =  x - mouseX;
             var rectheight = y - mouseY;
-            if (rectwidth>=rectheight){
+            console.log(rectwidth, rectheight);
+            if (Math.abs(rectwidth)>=Math.abs(rectheight)){
                 dragbox.width = rectwidth;
-                dragbox.height = 0.8 * dragbox.width;
+                dragbox.height = 0.8 * Math.abs(dragbox.width) * ((rectheight<0)?-1:1);
             }
             else{
                 dragbox.height = rectheight;
-                dragbox.width = 1.25 * dragbox.height;
+                dragbox.width = 1.25 * Math.abs(dragbox.height) * ((rectwidth<0)?-1:1);
             }
-            // console.log(dragbox.height, dragbox.width);
+            console.log(dragbox.height, dragbox.width);
             repaint();
 
             // dragbox.draw();
@@ -333,13 +336,13 @@ window.onload = function () {
             window.removeEventListener("mouseup",onMouseUp);
             window.removeEventListener("touchup", onMouseUp)
             // console.log(dragbox.height, dragbox.width);
-            if (dragbox.height<0 || dragbox.width<0){
-              dragbox.x += dragbox.width;
-              dragbox.y += dragbox.height;
-
-              dragbox.width *= -1;
-              dragbox.height *= -1;
-              
+            if (dragbox.height<0){
+                dragbox.y+=dragbox.height;
+                dragbox.height *= -1;
+            }
+            if (dragbox.width<0){
+                dragbox.x += dragbox.width;
+                dragbox.width *= -1;
             }
             if (dragbox.height>10 && dragbox.width>10){
                 prevstate = [posx, posy, negx, negy];
