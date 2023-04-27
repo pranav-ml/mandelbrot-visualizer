@@ -14,8 +14,7 @@ canvas:hover{
 }
 
 select {
-    /* margin: 20% 20%; */
-    /* text-indent: 30%; */
+    padding: 10px;
     display: flex;
     margin-right: auto;
     margin-left: auto;
@@ -46,11 +45,12 @@ select {
   }
   
   select option {
+    margin-left: 30px;
     background-color: #222;
     color: #fff;
     font-size: 16px;
     font-family: "Helvetica Neue", sans-serif;
-    text-align: center;    
+    /* text-align: center;     */
   }
   
   select::-ms-expand {
