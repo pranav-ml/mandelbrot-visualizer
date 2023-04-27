@@ -304,6 +304,11 @@ window.onload = function () {
                 var down = new BigDecimal("" + math.round(dragbox.y + dragbox.height));
                 var right = new BigDecimal("" + math.round(dragbox.x + dragbox.width));
 
+                up.setScale(precision+5);
+                left.setScale(precision+5);
+                down.setScale(precision+5);
+                right.setScale(precision+5);
+
                 up = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(up));
                 down = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(down));
                 left = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(left));
