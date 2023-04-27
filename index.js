@@ -179,10 +179,10 @@ window.onload = function () {
       posy = py;
       negx = nx;
       negy = ny;
-      negx = negx.setScale(precision+8,BigDecimal.ROUND_HALF_EVEN);
-      posx = posx.setScale(precision+8,BigDecimal.ROUND_HALF_EVEN);
-      negy = negy.setScale(precision+8,BigDecimal.ROUND_HALF_EVEN);
-      posy = posy.setScale(precision+8,BigDecimal.ROUND_HALF_EVEN);
+      negx = negx.setScale(precision+5,BigDecimal.ROUND_HALF_EVEN);
+      posx = posx.setScale(precision+5,BigDecimal.ROUND_HALF_EVEN);
+      negy = negy.setScale(precision+5,BigDecimal.ROUND_HALF_EVEN);
+      posy = posy.setScale(precision+5,BigDecimal.ROUND_HALF_EVEN);
   }
 
     function handleCanvasTouchDown(e){
@@ -301,38 +301,38 @@ window.onload = function () {
                 console.log()
                 if (!dragbox) return;
                 console.log("limits before setting: ",negx.toString(), posx.toString(), negy.toString(), posy.toString());
-                // var up = new BigDecimal("" + dragbox.y);
-                // var left = new BigDecimal("" + dragbox.x);
-                // var down = new BigDecimal("" + dragbox.y + dragbox.height);
-                // var right = new BigDecimal("" + dragbox.x + dragbox.width);
-                // // console.log(up.toString(), left.toString(), down.toString(), right.toString());
+                var up = new BigDecimal("" + Math.round(dragbox.y));
+                var left = new BigDecimal("" + Math.round(dragbox.x));
+                var down = new BigDecimal("" + Math.round(dragbox.y + dragbox.height));
+                var right = new BigDecimal("" + Math.round(dragbox.x + dragbox.width));
+                // console.log(up.toString(), left.toString(), down.toString(), right.toString());
                 
 
-                // up = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(up));
-                // down = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(down));
-                // left = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(left));
-                // right = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(right));
-                // setLimits(right,up,left,down);
-                var rectX = new BigDecimal("" + Math.round(dragbox.x));  // (Firefox can have fractional parts)
-                var rectY = new BigDecimal("" + Math.round(dragbox.y));
-                var rectW = new BigDecimal("" + Math.round(dragbox.width));
-                var rectH = new BigDecimal("" + Math.round(dragbox.height));
-                var ImageWidth = new BigDecimal("" + canvas.width);
-                var ImageHeight = new BigDecimal("" + canvas.height);
-                var pixelWidth = posx.subtract(negx).divide(ImageWidth,BigDecimal.ROUND_HALF_EVEN);
-                var pixelHeight = posy.subtract(negy).divide(ImageHeight,BigDecimal.ROUND_HALF_EVEN);
-                var newXmin,newXmax,newYmin,newYmax;
-                newXmin = negx.add(pixelWidth.multiply(rectX));
-                newYmax = posy.subtract(pixelHeight.multiply(rectY));
-                var newWidth = pixelWidth.multiply(rectW);
-                var newHeight = pixelHeight.multiply(rectH);
-                newXmax = newXmin.add(newWidth);
-                newYmin = newYmax.subtract(newHeight);
-                console.log("limits after setting:");
-                // console.log(negx.toString(), posx.toString(), negy.toString(), posy.toString());
-                console.log(newXmin.toString(), newXmax.toString(), newYmin.toString(), newYmax.toString());
-                console.log("-------------------\n\n")
-                setLimits(newXmax, newYmax, newXmin, newYmin);
+                up = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(up));
+                down = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(down));
+                left = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(left));
+                right = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(right));
+                setLimits(right,up,left,down);
+                // var rectX = new BigDecimal("" + Math.round(dragbox.x));  // (Firefox can have fractional parts)
+                // var rectY = new BigDecimal("" + Math.round(dragbox.y));
+                // var rectW = new BigDecimal("" + Math.round(dragbox.width));
+                // var rectH = new BigDecimal("" + Math.round(dragbox.height));
+                // var ImageWidth = new BigDecimal("" + canvas.width);
+                // var ImageHeight = new BigDecimal("" + canvas.height);
+                // var pixelWidth = posx.subtract(negx).divide(ImageWidth,BigDecimal.ROUND_HALF_EVEN);
+                // var pixelHeight = posy.subtract(negy).divide(ImageHeight,BigDecimal.ROUND_HALF_EVEN);
+                // var newXmin,newXmax,newYmin,newYmax;
+                // newXmin = negx.add(pixelWidth.multiply(rectX));
+                // newYmax = posy.subtract(pixelHeight.multiply(rectY));
+                // var newWidth = pixelWidth.multiply(rectW);
+                // var newHeight = pixelHeight.multiply(rectH);
+                // newXmax = newXmin.add(newWidth);
+                // newYmin = newYmax.subtract(newHeight);
+                // console.log("limits after setting:");
+                // // console.log(negx.toString(), posx.toString(), negy.toString(), posy.toString());
+                // console.log(newXmin.toString(), newXmax.toString(), newYmin.toString(), newYmax.toString());
+                // console.log("-------------------\n\n")
+                // setLimits(newXmax, newYmax, newXmin, newYmin);)
             }
             
             canvas.removeEventListener("mousemove",onDrag);
@@ -533,12 +533,12 @@ window.onload = function () {
             dx = dx.multiply(ten);
         }
         if (precision>high_precision_cutoff){
-            statusIndicator.innerHTML = "Calculating High Precision ("+(precision+8)+" digits)";
+            statusIndicator.innerHTML = "Calculating High Precision ("+(precision+5)+" digits)";
             high_precision = true;
-            negx.setScale(precision+8, BigDecimal.ROUND_HALF_EVEN);
-            negy.setScale(precision+8, BigDecimal.ROUND_HALF_EVEN);
-            posx.setScale(precision+8, BigDecimal.ROUND_HALF_EVEN);
-            posy.setScale(precision+8, BigDecimal.ROUND_HALF_EVEN);
+            negx.setScale(precision+5, BigDecimal.ROUND_HALF_EVEN);
+            negy.setScale(precision+5, BigDecimal.ROUND_HALF_EVEN);
+            posx.setScale(precision+5, BigDecimal.ROUND_HALF_EVEN);
+            posy.setScale(precision+5, BigDecimal.ROUND_HALF_EVEN);
 
             var dx = posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN);
 
