@@ -107,7 +107,7 @@ window.onload = function () {
     // console.log(screen.width, screen.height);
     
 // ---------- canvas variables --------------
-    console.log(window.innerHeight);
+    // console.log(window.innerHeight);
     if (document.documentElement.clientHeight>document.documentElement.clientWidth){
         alert("Please rotate your device for optimal experience.");
         location.reload();
@@ -171,7 +171,7 @@ window.onload = function () {
 
     var statusIndicator = document.getElementById("statusIndicator");
     var calculatedRowsIndicator = document.getElementById("rowsCalculated");
-    var debug;
+
 // functions
 
     function setLimits(px, py, nx, ny){
@@ -179,10 +179,10 @@ window.onload = function () {
       posy = py;
       negx = nx;
       negy = ny;
-      negx = negx.setScale(precision+5,BigDecimal.ROUND_HALF_EVEN);
-      posx = posx.setScale(precision+5,BigDecimal.ROUND_HALF_EVEN);
-      negy = negy.setScale(precision+5,BigDecimal.ROUND_HALF_EVEN);
-      posy = posy.setScale(precision+5,BigDecimal.ROUND_HALF_EVEN);
+      negx = negx.setScale(precision+8,BigDecimal.ROUND_HALF_EVEN);
+      posx = posx.setScale(precision+8,BigDecimal.ROUND_HALF_EVEN);
+      negy = negy.setScale(precision+8,BigDecimal.ROUND_HALF_EVEN);
+      posy = posy.setScale(precision+8,BigDecimal.ROUND_HALF_EVEN);
   }
 
     function handleCanvasTouchDown(e){
@@ -280,7 +280,7 @@ window.onload = function () {
             
             var rectwidth =  x - mouseX;
             var rectheight = y - mouseY;
-            console.log(rectwidth, rectheight);
+            // console.log(rectwidth, rectheight);
             if (Math.abs(rectwidth)>=Math.abs(rectheight)){
                 dragbox.width = rectwidth;
                 dragbox.height = 0.8 * Math.abs(dragbox.width) * ((rectheight<0)?-1:1);
@@ -289,7 +289,7 @@ window.onload = function () {
                 dragbox.height = rectheight;
                 dragbox.width = 1.25 * Math.abs(dragbox.height) * ((rectwidth<0)?-1:1);
             }
-            console.log(dragbox.height, dragbox.width);
+            // console.log(dragbox.height, dragbox.width);
             repaint();
 
             // dragbox.draw();
@@ -298,22 +298,41 @@ window.onload = function () {
         function onMouseUp(e){
             
             function calculateNewLimits(){
+                console.log()
                 if (!dragbox) return;
-                var up = new BigDecimal("" + math.round(dragbox.y));
-                var left = new BigDecimal("" + math.round(dragbox.x));
-                var down = new BigDecimal("" + math.round(dragbox.y + dragbox.height));
-                var right = new BigDecimal("" + math.round(dragbox.x + dragbox.width));
+                console.log("limits before setting: ",negx.toString(), posx.toString(), negy.toString(), posy.toString());
+                // var up = new BigDecimal("" + dragbox.y);
+                // var left = new BigDecimal("" + dragbox.x);
+                // var down = new BigDecimal("" + dragbox.y + dragbox.height);
+                // var right = new BigDecimal("" + dragbox.x + dragbox.width);
+                // // console.log(up.toString(), left.toString(), down.toString(), right.toString());
+                
 
-                up.setScale(precision+5);
-                left.setScale(precision+5);
-                down.setScale(precision+5);
-                right.setScale(precision+5);
-
-                up = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(up));
-                down = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(down));
-                left = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(left));
-                right = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(right));
-                setLimits(right,up,left,down);
+                // up = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(up));
+                // down = posy.subtract(posy.subtract(negy).divide(new BigDecimal(""+(canvasHeight)),BigDecimal.ROUND_HALF_EVEN).multiply(down));
+                // left = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(left));
+                // right = negx.add(posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).multiply(right));
+                // setLimits(right,up,left,down);
+                var rectX = new BigDecimal("" + Math.round(dragbox.x));  // (Firefox can have fractional parts)
+                var rectY = new BigDecimal("" + Math.round(dragbox.y));
+                var rectW = new BigDecimal("" + Math.round(dragbox.width));
+                var rectH = new BigDecimal("" + Math.round(dragbox.height));
+                var ImageWidth = new BigDecimal("" + canvas.width);
+                var ImageHeight = new BigDecimal("" + canvas.height);
+                var pixelWidth = posx.subtract(negx).divide(ImageWidth,BigDecimal.ROUND_HALF_EVEN);
+                var pixelHeight = posy.subtract(negy).divide(ImageHeight,BigDecimal.ROUND_HALF_EVEN);
+                var newXmin,newXmax,newYmin,newYmax;
+                newXmin = negx.add(pixelWidth.multiply(rectX));
+                newYmax = posy.subtract(pixelHeight.multiply(rectY));
+                var newWidth = pixelWidth.multiply(rectW);
+                var newHeight = pixelHeight.multiply(rectH);
+                newXmax = newXmin.add(newWidth);
+                newYmin = newYmax.subtract(newHeight);
+                console.log("limits after setting:");
+                // console.log(negx.toString(), posx.toString(), negy.toString(), posy.toString());
+                console.log(newXmin.toString(), newXmax.toString(), newYmin.toString(), newYmax.toString());
+                console.log("-------------------\n\n")
+                setLimits(newXmax, newYmax, newXmin, newYmin);
             }
             
             canvas.removeEventListener("mousemove",onDrag);
@@ -514,17 +533,17 @@ window.onload = function () {
             dx = dx.multiply(ten);
         }
         if (precision>high_precision_cutoff){
-            statusIndicator.innerHTML = "Calculating High Precision ("+precision+" digits)";
+            statusIndicator.innerHTML = "Calculating High Precision ("+(precision+8)+" digits)";
             high_precision = true;
-            negx.setScale(precision+5, BigDecimal.ROUND_HALF_EVEN);
-            negy.setScale(precision+5, BigDecimal.ROUND_HALF_EVEN);
-            posx.setScale(precision+5, BigDecimal.ROUND_HALF_EVEN);
-            posy.setScale(precision+5, BigDecimal.ROUND_HALF_EVEN);
+            negx.setScale(precision+8, BigDecimal.ROUND_HALF_EVEN);
+            negy.setScale(precision+8, BigDecimal.ROUND_HALF_EVEN);
+            posx.setScale(precision+8, BigDecimal.ROUND_HALF_EVEN);
+            posy.setScale(precision+8, BigDecimal.ROUND_HALF_EVEN);
 
-            var dx = posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN).setScale(precision,BigDecimal.ROUND_HALF_EVEN);
+            var dx = posx.subtract(negx).divide(new BigDecimal(""+(canvasWidth)),BigDecimal.ROUND_HALF_EVEN);
 
             var log2of10 = Math.log(10)/Math.log(2);
-            var chunks = Math.floor((precision * log2of10)/16 + 2);
+            var chunks = Math.floor((negx.scale() * log2of10)/16 + 2);
             // console.log(precision);
             // console.log(chunks);
             dxArray = new Array(chunks+1);
@@ -549,6 +568,10 @@ window.onload = function () {
         }
 
         else{
+            // negx.setScale(16, BigDecimal.ROUND_HALF_EVEN);
+            // negy.setScale(16, BigDecimal.ROUND_HALF_EVEN);
+            // posx.setScale(16, BigDecimal.ROUND_HALF_EVEN);
+            // posy.setScale(16, BigDecimal.ROUND_HALF_EVEN);
             high_precision = false;
             var row = 0;
             var divisions = Math.ceil(canvasHeight/4);
@@ -563,10 +586,6 @@ window.onload = function () {
                 }
 
         }
-        
-        
-        
-        
         
 
         running = true;
